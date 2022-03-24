@@ -24,8 +24,48 @@ for (i in rnorm(10)) {
 # 5 people at random, exactly 3 will be men?
 # Use a for loop, which simulates the picking.
 #####Problem 3#####
-x = NULL
-for (i in 1:5) {
-  x = c(x,sample(c("Man","Man","Man","Man","Man","Man","Wonan","Wonan","Wonan","Wonan","Wonan","Wonan","Wonan","Wonan"),1))
+a = c(rep("Men",6), rep("Women", 8))
+b = NULL
+for (i in 1:10000) {
+  c = sample(people, size = 5, replace = FALSE)
+  
+  if (sum(choose=="Men")==3) {
+    b = c(b,1)
+    } else {
+    b = c(b,0)
+  }
+#####Problem 4#####
+# Calculate the price of a european style option with strike price of 120, with an
+# expiration date in 100 days.
+# The underlying stock has a starting price of 100, which will change every 
+# day based on a random number coming from a normal distribution with 
+# mean = 0 and standard deviation = 7. This is rnorm(1, mean = 0, sd = 5) 
+# The starting price was 100 on day 0.
+# On day 1 it is 100 + rnorm(1, mean = 0, sd = 7). 
+# On day 2 it is price from day 1 + rnorm(1, mean = 0, sd = 7) etc.
+# On day 100 it is price from day 99 + rnorm(1, mean = 0, sd = 7).
+# 
+# European style options can only be exercised at expiry date. 
+# So you must calculate the price of the underlying asset at day 100 and 
+# compare it to the strike price. Then calculate the potential profit. 
+# Because it is a call option the profit will range from 0 to infinity.
+# Make 1000 simulations of the profit and the price of the call option,
+# will be equal to the sum of all the profits divided by the number of 
+# simulations(in this case 1000).
+#####Problem 4#####
+res = NULL
+dif = NULL
+Stri = 120
+for (j in 1:1000) {
+for (i in 1:100) {
+  Price = 100
+  for(k in 1:1) {
+    Price = Price + rnorm(1, mean = 0, sd = 7)
+  }
+  res = c(res,Price)
 }
-#This is as far as i could get#
+for (j in 1:1) {
+  dif = Stri - Price
+  print(dif)
+}
+}
