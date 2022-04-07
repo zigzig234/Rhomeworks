@@ -85,22 +85,55 @@ group_by(carrier) %>%
 
 #5.6.6#
 #it orders the result from count() and we can use it any time we use count followed by the arrange function
-
+flights %>%
+  count(dest, sort = TRUE)
 #5.7.1#
 #lead,lag,mean,min_rank and row_number work in all groups when group_by is used in mutate or filter
 #+,-,<,==,%%,%/% and log are not affected by group_by
 
 #5.7.2#
 flights %>%
-  filter(!is.na(tailnum)) %>%
+  filter(!is.na(tailnum), is.na(arr_time) | !is.na(arr_delay)) %>%
   mutate(on_time = !is.na(arr_time) & (arr_delay <= 0)) %>%
   group_by(tailnum) %>%
   summarise(on_time = mean(on_time), n = n()) %>%
+  filter(n >= 20) %>%
   filter(min_rank(on_time) == 1)
-#Too many outputs, don't know how to sort
+#Too many outputs, don't know how to sort(update - problem solved)
 
 #5.7.3#
 flights %>%
   group_by(hour) %>%
   summarise(arr_delay = mean(arr_delay, na.rm = TRUE)) %>%
   arrange(arr_delay)
+
+#5.7.4#
+flights %>%
+  filter(arr_delay > 0) %>%
+  group_by(dest) %>%
+  mutate(
+    arr_delay_total = sum(arr_delay),
+    arr_delay_prop = arr_delay / arr_delay_total
+  ) %>%
+  select(dest, month, day, dep_time, carrier, flight,
+         arr_delay, arr_delay_prop) %>%
+  arrange(dest, desc(arr_delay_prop))
+
+#5.7.5#
+delayed_flights <- flights %>%
+  arrange(origin, month, day, dep_time) %>%
+  group_by(origin) %>%
+  mutate(dep_delay_lag = lag(dep_delay)) %>%
+  filter(!is.na(dep_delay), !is.na(dep_delay_lag))
+
+#5.7.6#
+normal_flights <- flights %>%
+  filter(!is.na(air_time)) %>%
+  group_by(dest, origin) %>%
+  mutate(
+    air_time_mean = mean(air_time),
+    air_time_sd = sd(air_time),
+    n = n()
+  ) %>%
+  ungroup() %>%
+  mutate(air_time_standard = (air_time - air_time_mean) / (air_time_sd + 1)
