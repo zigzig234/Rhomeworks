@@ -14,8 +14,15 @@
 # In order to do this, first create a new column, which will show you the 
 # year and the month. You can do this using the functions substr() or floor_date.
 #####Problem 1#####
+install.packages("tidyquant")
+install.packages("padr")
 library(tidyverse)
-setwd("C:/Users/angel/Documents/RStudio")
-AMAZON=read.csv("AMZN.csv")
-Meta=read.csv("FB.csv")
-Netflix=read.csv("NFLX.csv")
+library(tidyquant)
+library(padr)
+library(dplyr)
+stocks = tq_get(c("NFLX","FB","AMZN"), get = "stock.prices", from = "2019-01-01", to  = "2021-04-01") %>%
+  select(c(symbol,date,adjusted)) %>%
+  pad() %>%
+  fill(c(symbol,adjusted),.direction = 'up');
+select_stocks=tq_get(c("FB","AMZN"),get = "stock.prices", from = "2019-01-01", to = "2019-07-01") %>% arrange(symbol,desc(date))
+  
