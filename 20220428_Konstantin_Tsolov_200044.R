@@ -36,7 +36,7 @@ SMA_fun(x,1)
 #####Problem 2#####
 # Find all prime numbers less than 100, using for/while loops.
 #####Problem 2#####
-prime_numbers <- function(n) {
+prm_num = function(n) {
   if (n >= 2) {
     x = seq(2, n)
     prime_nums = c()
@@ -53,6 +53,6 @@ prime_numbers <- function(n) {
     stop("Invalid input")
   }
 } 
-prime_numbers(150)
+prm_num(100)
 
 #No time for problem 3, will try to do it later
