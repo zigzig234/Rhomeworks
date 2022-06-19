@@ -137,3 +137,17 @@ normal_flights <- flights %>%
   ) %>%
   ungroup() %>%
   mutate(air_time_standard = (air_time - air_time_mean) / (air_time_sd + 1)
+#5.7.7#
+flights %>%
+  group_by(dest) %>%
+  dplyr::filter(n_distinct(carrier) > 2) %>%
+  group_by(carrier) %>%
+  dplyr::summarise(n = n_distinct(dest)) %>%
+  arrange(-n)
+ #5.7.8#
+ not_cancelled %>%
+  group_by(origin, tailnum) %>%
+  dplyr::summarise(
+    count = n(),
+    agg_dep_delay = sum(cumsum(dep_delay > 60) < 1)
+  )
