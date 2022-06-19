@@ -12,6 +12,8 @@
 # If the price goes above the upper bound - sell.
 # If the price goes below the lower bound - buy.
 
+#####Problem 1#####
+
 library(tidyquant)
 library(tidyverse)
 library(RcppRoll)
@@ -40,16 +42,14 @@ SMA<-DATA%>%
                 Upper.Bound = sma20 + 2 * Stand.Dev.,
                 Lower.Bound = sma20 - 2* Stand.Dev.,
                 Strategy = ifelse(adjusted > Upper.Bound, "Sell", ifelse(adjusted < Lower.Bound, "Buy", "Hold")))
-                      
-
-#####Problem 1#####
-
 #####Problem 2#####
 # Calculate the RSI using the instruction about the formula from here:
 # https://www.investopedia.com/terms/r/rsi.asp
 # Employ the following strategy and compare to a baseline strategy of buy and hold:
 # If the RSI above 65 - sell.
 # If the price goes below 35 - buy.
+         
+#####Problem 2#####
 
 info2<-tidyquant::tq_get("GOOG", from = lubridate::ymd(FromDate),
                                                 to=lubridate::ymd(ToDate))%>%
@@ -68,6 +68,3 @@ RSIdata2<-RSIdata%>%
          Losses.RSI = RcppRoll::roll_sumr(Losses, n= 14)/14,
          RSI = 100 - (100/(1 + (Gains.RSI/Losses.RSI))),
          Strategy = ifelse(RSI > 65, "Sell",ifelse(RSI < 35, "Buy", "Hold")))
-         
-         
-#####Problem 2#####
