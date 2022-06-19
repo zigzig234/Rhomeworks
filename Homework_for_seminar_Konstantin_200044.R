@@ -53,19 +53,17 @@ for (i in 1:10000) {
 # will be equal to the sum of all the profits divided by the number of 
 # simulations(in this case 1000).
 #####Problem 4#####
-res = NULL
-dif = NULL
+Prce = 100
+Prf = 0
 Stri = 120
 for (j in 1:1000) {
 for (i in 1:100) {
-  Price = 100
-  for(k in 1:1) {
-    Price = Price + rnorm(1, mean = 0, sd = 7)
+    Prce = c(Prce + rnorm(1, mean = 0, sd = 7))
   }
-  res = c(res,Price)
-}
-for (j in 1:1) {
-  dif = Stri - Price
-  print(dif)
+if(Prce > 120){
+  Prf = Prf + Prce - 120
 }
 }
+ans = Prce/1000
+
+
