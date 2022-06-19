@@ -146,6 +146,43 @@ select(flights, one_of(vars))
 
 #1#
 
-#Still thinking about these questions
+##Currently dep_time and sched_dep_time are convenient to look at, but hard to compute with because they're not really continuous numbers. 
+#Convert them to a more convenient representation of number of minutes since midnight.
 
+mutate(flights,
+  dep_time= (dep_time %/% 100 * 60 + dep_time %% 100),
+  sch_dep_time = (sched_dep_time %/% 100 * 60 + sched_dep_time %% 100))
 
+#2#
+
+#Compare air_time with arr_time - dep_time. What do you expect to see? What do you see? What do you need to do to fix it?
+
+airtime = dplyr::mutate(flights,
+         dep_time = (dep_time %/% 100 * 60 + dep_time %% 100) %% 1440,
+         arr_time = (arr_time %/% 100 * 60 + arr_time %% 100) %% 1440,
+         air_time_diff = air_time - arr_time + dep_time
+                        
+ #3#
+ #Compare dep_time, sched_dep_time, and dep_delay. How would you expect those three numbers to be related?
+                        
+flights_deptime = dplyr::mutate(flights,
+         dep_time_min = (dep_time %/% 100 * 60 + dep_time %% 100) %% 1440,
+         sched_dep_time_min = (sched_dep_time %/% 100 * 60 +
+                                 sched_dep_time %% 100) %% 1440,
+         dep_delay_diff = dep_delay - dep_time_min + sched_dep_time_min
+  )
+
+#4#
+#Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Carefully read the documentation for min_rank().
+head(arrange(flights,desc(row_number(flights$dep_delay))), 10)
+                        
+#5#
+#What does 1:3 + 1:10 return? Why?
+1:3 + 1:10   
+# We get a warning message "In 1:3 + 1:10 : longer object length is not a multiple of shorter object length". Warning is produced because the short vector is not a multiple
+#of the longer vector. We also get a vector with a length of 10 (2,4,6,5,7,9,8,10,12,11)
+                        
+#6#
+#What trigonometric functions does R provide?            
+# We have sin, tan,acos,asin,atan,atan2,cospi,sinpi,tanpi.                        
+#                        
