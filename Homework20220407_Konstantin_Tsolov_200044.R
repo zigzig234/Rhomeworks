@@ -54,3 +54,29 @@ a <- DataFrame %>%
   filter(day == max(day)) %>%
   arrange(year, month)
 view(a)
+
+#####Problem 2#####
+#Use the dataframe from problem 1.2.
+# Use the SMA function from the tidyquant package to calculate the 10day SMA 
+# and the 26 day SMA for each of the 3 stocks. 
+# How many times did the 10 day SMA line cross 26 day SMA line from below? 
+# How many times did the 10 day SMA line cross 26 day SMA line from above?
+# You can take a look at this article: https://www.investopedia.com/trading/macd/
+# Essentially by cross from above/below I want you to find the buy/sell signals.
+
+cross1<- DF %>%
+  mutate(SMA10 = SMA(adjusted, n = 10),
+         SMA26 = SMA(adjusted, n = 26),
+         LagSMA10 = lag(SMA10),
+         LagSMA26 = lag(SMA26)) %>%
+  filter(!is.na(LagSMA26)) %>%
+  mutate(cross2 = case_when(LagSMA10 > LagSMA26 & SMA10 < SMA26 ~ "crossed from below",
+                             LagSMA10 < LagSMA26 & SMA10 > SMA26 ~ "crossed from above",
+                             TRUE ~ "no cross"),
+         Signal = case_when(cross2 == "crossed from below" ~ "sell",
+                            cross2 == "crossed from above" ~ "buy",
+                            TRUE ~ "do nothing"))
+
+sum(cross1$cross2 == "crossed from below")
+
+sum(cross1$cross2 == "crossed from above")
